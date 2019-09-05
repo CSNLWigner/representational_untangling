@@ -74,7 +74,7 @@ scatter(maxx_cos,0.1+0.9*maxy_cos,100,'r','d','filled')
 
 title({'linear decoder',''})
 
-text(-76.5,1+0.11,'A','fontsize',ABC_size,'HorizontalAlignment','center','fontweight','bold')
+text(-76.5,1+0.11,'A','fontsize',ABC_size,'HorizontalAlignment','center')
 
 axes_position = [mleft+width_A+gapx mbottom width_A height];
 axes('unit','pixel','position',axes_position)
@@ -111,8 +111,8 @@ end
      
 title({'optimal decoder',''})
 
-text(-76.5,11.1,'B','fontsize',ABC_size,'HorizontalAlignment','center','fontweight','bold')
+text(-76.5,11.1,'B','fontsize',ABC_size,'HorizontalAlignment','center')
 
 set(gcf,'PaperPositionMode','auto','papersize',[45 16]);
-print(gcf,'Fig3_S3','-dpdf','-r0')
-saveas(gcf,sprintf('%s.png',mfilename));
+print(gcf,mfilename,'-dpdf','-r0')
+saveas(gcf,[mfilename,'.png']);
