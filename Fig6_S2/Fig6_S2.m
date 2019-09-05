@@ -5,93 +5,111 @@ clearvars
 cd(fileparts(which(mfilename)));
 addpath('../functions/');
 
-load('kappa12_ranges_data.mat')
+load('script_2d_ILC_data.mat','thresholds','FC_LIN');
+ILC_2D_LIN = FC_LIN;
 
-width = 360;
-height = 360;
-mtop = 47;
+load('script_2d_Bayes_ILC_data.mat','FC_OPT');
+ILC_2D_OPT = FC_OPT;
+
+font_size = 16;
+curve_width = 3;
+ax_width = 1;
+
+xmin = -72.5;
+xmax = -41;
+
+phase_color = [0 .3 .8];
+white = [1 1 1];
+light_blue = 0.33*phase_color + 0.66*white;
+hist_color = [0.66 0.8 0.66];
+
+width = 400;
+height = 320;
+mtop = 25;
 mbottom = 60;
-mleft = 60; 
-mright = 105;
-gapx = 35;
-figure_width = 2*width+gapx+mleft+mright;
-figure_height = height+mbottom+mtop;
+mright = 30;
+mleft = 65;
+
+figure_width = mleft+width+mright;
+figure_height = mbottom+height+mtop;
 set(gcf,'unit','pixel','position',[0 0 figure_width figure_height])
 set(gcf,'color','white')
 
-font_size = 16;
-ABC_size = 26;
+axes_position = [mleft mbottom width height];
+axes('unit','pixel','position',axes_position)
+set(gca,'FontName','Helvetica','fontsize',font_size,'linewidth',ax_width)
 
-for kappa = 1:2
+plot([])
+hold on
+ 
+load('uhist_data.mat','counts','centers');
+area(centers,0.45*counts/max(counts),'faceColor',hist_color,'edgecolor','w')    
+set(gca,'layer','top')
 
-    axes_position = [mleft+(kappa-1)*(width+gapx) mbottom width height];
-    subplot_axes = axes('unit','pixel','position',axes_position);
-    set(gca,'linewidth',1,'FontName','Helvetica','fontsize',font_size)
+set(gca,'xlim',[xmin xmax],'xtick',-70:10:-45)
+set(gca,'ylim',[0 1],'ytick',0:.1:1,'yticklabel',{'0','','0.2','','0.4','','0.6','','0.8','','1'})
 
-    plot([])
-    hold on
-    load(sprintf('script_kappa%d_data.mat',kappa))
+xlabel('FRNL threshold [mV]','FontName','Helvetica','fontsize',font_size)
+ylabel('fraction correct','FontName','Helvetica','fontsize',font_size);
 
-    N1 = size(ITERATIONS,1);
+p1 = plot(thresholds,ILC_2D_OPT,'linewidth',curve_width,'color',light_blue);
+p2 = plot(thresholds,ILC_2D_LIN,'linewidth',curve_width,'color',phase_color);
 
-    axis([thresholds(1) thresholds(end) 0 1])
+[maxx,maxy] = maxfit(thresholds,ILC_2D_LIN);
+scatter(maxx,maxy,100,phase_color,'d','filled')
 
-    set(gca,'yminortick','on','ytick',0:0.2:1)
-    ax = gca;
-    ax.YRuler.MinorTickValues = 0:0.1:1;
+leg = legend([p1 p2],{' optimal decoder',' linear decoder'},'location','northwest');
+a = get(leg,'position');
+a(1) = a(1)+0.05;
+set(leg,'position',a);
+legend boxoff
 
-    xlabel('FRNL threshold [mV]','FontName','Helvetica','fontsize',font_size)
+gwidth = 69;
+axes_position = [mleft+width-1.65*gwidth mbottom+height-1.1*gwidth gwidth gwidth];
+subplot_axes = axes('unit','pixel','position',axes_position);
+hold on
+axis off
+daspect([1 1 1])
 
-    switch kappa
-        case 1
-            text(-67.5,1.07,'A','FontName','Helvetica','fontsize',ABC_size)
-            text(-60,0.99,'$\kappa = 1$','Interp','Latex','fontsize',ABC_size-6)
-            FC(1,29) = (FC(1,28)+FC(1,30))/2-0.012;
-        case 2
-            text(-70.5,1.07,'B','FontName','Helvetica','fontsize',ABC_size)
-            text(-62,0.99,'$\kappa = 2$','Interp','Latex','fontsize',ABC_size-6)
-            FC(1,32) = (FC(1,31)+FC(1,33))/2+0.005;
-            FC(3,42) = (FC(3,41)+FC(3,43))/2-0.01;
-            OPTFC(2,11) = OPTFC(2,11)-0.003;
-            THMAX90(2,1) = THMAX90(2,1)+0.065;
-    end
+gabor_params = [0,0,3,45,0,10];
+NN = 1000;
+G = circular_gabor([5],gabor_params,NN);
+maxg = max(max(G));
+for i = 1:NN
+    for j = 1:NN
+        if (i-NN/2)^2+(j-NN/2)^2 > (NN/2)^2
+            G(i,j) = maxg;
+        end
+    end 
+end  
+imagesc(G)
+colormap(0.25+0.75*gray(256));
 
-    curve_plots = 1:N1;
-    legend_strings = {};
+cx0 = NN/2;
+cy0 = NN/2;
+rr = 1.5*NN/2;
+ph0 = pi/4;
+dph = pi*12/180;
+tt = linspace(ph0-dph,ph0+dph);
+xx = cx0+rr*cos(tt);
+yy = cy0+rr*sin(tt);
+hold on
+plot(xx,yy,'color','k','linewidth',1.5)
 
-    for n1 = 1:N1
-        color = [0 1-n1/N1 n1/N1];
-        curve_plots(n1) = plot(thresholds,FC(n1,:),'color',color,'linewidth',2);
+asize = 90;
+tilt1 = 20*pi/180;
+tilt2 = 25*pi/180;
+ax0 = cx0+rr*cos(ph0-dph);
+ay0 = cy0+rr*sin(ph0-dph);
+plot([ax0 ax0-asize*cos(pi/2-ph0+dph+tilt1)],[ay0 ay0+asize*sin(pi/2-ph0+dph+tilt1)],'color','k','linewidth',1.5)
+plot([ax0 ax0-asize*cos(pi/2-ph0+dph-tilt2)],[ay0 ay0+asize*sin(pi/2-ph0+dph-tilt2)],'color','k','linewidth',1.5)
+ax0 = cx0+rr*cos(ph0+dph);
+ay0 = cy0+rr*sin(ph0+dph);
+plot([ax0 ax0+asize*cos(pi/2-ph0-dph+tilt2)],[ay0 ay0-asize*sin(pi/2-ph0-dph+tilt2)],'color','k','linewidth',1.5)
+plot([ax0 ax0+asize*cos(pi/2-ph0-dph-tilt1)],[ay0 ay0-asize*sin(pi/2-ph0-dph-tilt1)],'color','k','linewidth',1.5)
 
-        line([OPTTH(kappa,n1) OPTTH(kappa,n1)],[0 0.033],'color',color,'linewidth',1.5)
-        scatter(OPTTH(kappa,n1),OPTFC(kappa,n1),25,'rd','filled')
-        level90 = 1/K+0.9*(OPTFC(kappa,n1)-1/K);
-        % line([THMIN90(kappa,n1) THMAX90(kappa,n1)],[level90 level90],'color',color)
-        scatter(THMIN90(kappa,n1),level90,15,'k','filled')
-        scatter(THMAX90(kappa,n1),level90,15,'k','filled')
-        
-        legend_strings{end+1} = sprintf('%.2g',noise_values(n1));
-    end
+text(1.44*rr,1.56*rr,sprintf('10%c',char(176)),'FontName','Helvetica','fontsize',font_size-2)
 
-    line([thresholds(1) thresholds(end)],[1/K 1/K],'LineStyle',':','Color','k','linewidth',1)
-
-    if kappa == 1
-        ylabel('fraction correct','FontName','Helvetica','fontsize',font_size)
-    end
-
-    if kappa == 2
-        set(gca,'yticklabel',[])
-        leg = legend(curve_plots,legend_strings,'FontName','Helvetica','fontsize',font_size);
-        legend boxoff
-        leg_pos = get(leg,'position');
-        leg_pos(1) = leg_pos(1)+0.1;
-        set(leg,'position',leg_pos)
-        title(leg,'noise [mV]','FontName','Helvetica','fontsize',font_size,'FontWeight','Normal')
-        leg.Title.NodeChildren.Position = [0.45 0.98 0];
-    end
-    
-    set(gca,'layer','top')
-end
-
-set(gcf,'PaperPositionMode','auto','papersize',[33 17]);
-saveas(gcf,sprintf('%s.pdf',mfilename));
+set(gcf,'PaperPositionMode','auto','papersize',[18 16]);
+print(gcf,mfilename,'-dpdf','-r0')
+saveas(gcf,[mfilename,'.png']);
