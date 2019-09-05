@@ -35,7 +35,7 @@ COLORS = [COLORS;COLORS];
 
 % line colors:
 Bayes_color = [0 .85 0];
-dark_green = [0 .6 0];
+dark_green = [0 .5 0];
 
 glambda = 3; gsigma = 2; slambda = glambda;
 dgtheta = 30; dgphi = 30;
@@ -130,7 +130,7 @@ aw = .055;
 tilt = 1.15;
 plot([ax0+aw*cos(ph0+dph-tilt*pi/2) ax0 ax0+aw*cos(ph0-dph-tilt*pi/2)],[ay0+aw*sin(ph0+dph-tilt*pi/2) ay0 ay0+aw*sin(ph0-dph-tilt*pi/2)],'color','k','linewidth',2)
 
-text(cx0,cy0+3.6*rr,{'stimulus'},'FontSize',15,'FontName','Helvetica','HorizontalAlign','center');
+text(cx0,cy0+3.5*rr,{'stimulus'},'FontSize',15,'FontName','Helvetica','HorizontalAlign','center');
 text(cx0,cy0+2.4*rr,{'phase'},'FontSize',15,'FontName','Helvetica','HorizontalAlign','center');
 
 text(ABC_x,ABC_y,'A','FontName','Helvetica','FontSize',ABC_size,'HorizontalAlign','center','unit','normalized')
@@ -178,8 +178,8 @@ xgap = .075; lrad = .075;
 for ind = 0:9:36
     plot(lx0+lxw+xgap+lrad+lrad*[-1 1]*cos(pi*ind/36),ly0+lyw*[ind/36 ind/36]+lrad*[-1 1]*sin(pi*ind/36),'color',COLORS(ind+35,:),'linewidth',3)
 end
-text(lx0-.265,ly0+lyw/2,{'stimulus'},'FontSize',15,'FontName','Helvetica','HorizontalAlign','center','rotation',90);
-text(lx0-.14,ly0+lyw/2,{'orientation'},'FontSize',15,'FontName','Helvetica','HorizontalAlign','center','rotation',90);
+text(lx0-0.260,ly0+lyw/2,{'stimulus'},'FontSize',15,'FontName','Helvetica','HorizontalAlign','center','rotation',90);
+text(lx0-0.145,ly0+lyw/2,{'orientation'},'FontSize',15,'FontName','Helvetica','HorizontalAlign','center','rotation',90);
 
 for stheta = dstheta:dstheta:180
     index = index+1;
@@ -586,4 +586,5 @@ plot([0 1],[.03 .46],'linewidth',3,'color',dark_green)
 contour(YCOORD,XCOORD,Z,[.5 .5],'linewidth',3,'color',Bayes_color)
 
 set(gcf,'PaperPositionMode','auto','papersize',[36 26]);
-saveas(gcf,sprintf('%s.pdf',mfilename));
+print(gcf,mfilename,'-dpdf','-r0')
+saveas(gcf,[mfilename,'.png']);
