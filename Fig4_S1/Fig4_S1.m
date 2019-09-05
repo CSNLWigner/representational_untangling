@@ -68,4 +68,5 @@ set(ylab,'position',ylab_pos)
 set(gca,'yticklabel',{'','0.1','','','','','','','','','1'})
 
 set(gcf,'PaperPositionMode','auto','papersize',[10 16]);
-print(gcf,'Fig4_S1','-dpdf','-r0')
+print(gcf,mfilename,'-dpdf','-r0')
+saveas(gcf,[mfilename,'.png']);
