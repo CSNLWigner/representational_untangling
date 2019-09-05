@@ -65,5 +65,5 @@ xlabel('FRNL threshold [mV]','FontName','Helvetica','fontsize',text_size)
 ylabel('fraction correct','FontName','Helvetica','fontsize',text_size)
 
 set(gcf,'PaperPositionMode','auto','papersize',[17 14]);
-print(gcf,'Fig3_S2','-dpdf','-r0')
-saveas(gcf,sprintf('%s.png',mfilename));
+print(gcf,mfilename,'-dpdf','-r0')
+saveas(gcf,[mfilename,'.png']);
