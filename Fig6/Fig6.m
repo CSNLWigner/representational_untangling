@@ -16,12 +16,10 @@ OPTRELTH = zeros(N_kappa,N_noise);
 kappa_strings = {'1','1d2','1d4','1d6','1d8','2'};
 start_index = [3,1,1,1,1,3];
 for kappa_index = 1:N_kappa
-    load(sprintf('noise_kappa%s/script_kappa%s_data.mat',kappa_strings{kappa_index},kappa_strings{kappa_index}),'MAXX','V0','V1')
+    load(sprintf('exponent/noise_kappa%s/script_kappa%s_data.mat',kappa_strings{kappa_index},kappa_strings{kappa_index}),'MAXX','V0','V1')
     OPTRELTH(kappa_index,start_index(kappa_index):end) = (MAXX-V0)/V1;
 end
 
-% font_size = 16;
-% ABC_size = 24;
 font_size = 22;
 ABC_size = 34;
 
@@ -34,7 +32,7 @@ width = 232;
 height = 262;
 mtop = 57;
 mbottom = 73;
-mleft = 100;
+mleft = 110;
 mright = 28;
 gapx = 37;
 
@@ -54,7 +52,11 @@ hold on
 set(gca,'xlim',[0 0.6],'xtick',0:0.2:1,'ylim',[0 0.75],'ytick',0:0.2:1)
 
 xlabel('noise-to-signal ratio','FontName','Helvetica','fontsize',font_size)
-ylabel({'normalized','optimal threshold'},'FontName','Helvetica','fontsize',font_size)
+ylab = ylabel({'normalised','optimal threshold'},'FontName','Helvetica','fontsize',font_size)
+
+ylab_pos = get(ylab,'position');
+ylab_pos(1) = ylab_pos(1)-0.02;
+set(ylab,'position',ylab_pos)
 
 load('V1/phase_nuisance_V1_data.mat','MAXX','V1_values','noise')
 optth_values = MAXX;
@@ -67,7 +69,7 @@ xx2 = noise_values/V1;
 yy2 = OPTRELTH(1,:);
 scatter(xx2(3:end),yy2(3:end),90,'+','MarkerEdgeColor',color1,'linewidth',1.5)
 
-text(-0.21,0.84,ABC{1},'FontName','Helvetica','fontsize',ABC_size)
+text(-0.23,0.84,ABC{1},'FontName','Helvetica','fontsize',ABC_size)
 
 % panel BCD
 
@@ -78,7 +80,7 @@ ref_indices = [3 2 1 1];
 line_width = 2;
 
 for n = 1:length(name)-1
-    load(sprintf('%s/phase_nuisance_%s_data.mat',shortname{n},shortname{n}))
+    load(sprintf('%s/phase_nuisance_noise3mV_%s_data.mat',shortname{n},shortname{n}))
     eval(sprintf('values = %s_values;',shortname{n}));
     N1 = size(ITERATIONS,1);
     
@@ -89,13 +91,13 @@ for n = 1:length(name)-1
     x1 = noise/V1;
     Y1 = (MAXX-V0)/V1;
     
-    load(sprintf('%s_noise6mV/phase_nuisance_%s_noise6mV_data.mat',shortname{n},shortname{n}),'MAXX','V0','V1','noise')
+    load(sprintf('%s/phase_nuisance_noise6mV_%s_data.mat',shortname{n},shortname{n}),'MAXX','V0','V1','noise')
     x2 = noise/V1;
     Y2 = (MAXX-V0)/V1;
     
     xshift = 0;
     if n == 3
-        xshift = 0.05;  
+        xshift = 0.05;
     end
     text(0.07-xshift/2,0.70,name{n},'FontName','Helvetica','fontsize',font_size)
     leg_x = 0.05+xshift/2;
@@ -115,9 +117,9 @@ for n = 1:length(name)-1
         end
         text(leg_x+leg_width+leg_dx,yline,sprintf('%g%s',values(i),ref),'FontName','Helvetica','fontsize',font_size)
     end
-        
+
     set(gca,'xlim',[0 0.6],'xtick',0:0.2:1,'ylim',[0 0.75],'ytick',0:0.2:1,'yticklabel',[])
-    xlabel('noise-to-signal ratio')
+    xlabel('noise-to-signal ratio','FontName','Helvetica','fontsize',font_size)
     
     text(-0.02,0.84,ABC{n+1},'FontName','Helvetica','fontsize',ABC_size)
 end
@@ -133,7 +135,6 @@ leg_x = leg_x-0.01;
 for i = 1:N_kappa
     colori = (N_kappa-i)/(N_kappa-1)*color1+(i-1)/(N_kappa-1)*color2;
     plot(noise_values(3:end)/V1,OPTRELTH(i,3:end),'linewidth',line_width,'color',colori)
-    
     yline = leg_y-(i-1)*leg_dy;
     line([leg_x leg_x+leg_width],[yline yline],'color',colori,'linewidth',line_width)
     if i == 1
@@ -141,15 +142,15 @@ for i = 1:N_kappa
     else
         ref = '';
     end
-    text(leg_x+leg_width+leg_dx,yline,sprintf('%g%s',kappa_values(i),ref),'FontName','Helvetica','fontsize',font_size)    
+    text(leg_x+leg_width+leg_dx,yline,sprintf('%g%s',kappa_values(i),ref),'FontName','Helvetica','fontsize',font_size)
 end
 text(0.07-xshift/2,0.70,name{end},'FontName','Helvetica','fontsize',font_size)
 
 set(gca,'xlim',[0 0.6],'xtick',0:0.2:1,'ylim',[0 0.75],'ytick',0:0.2:1,'yticklabel',[])
-xlabel('noise-to-signal ratio')
+xlabel('noise-to-signal ratio','FontName','Helvetica','fontsize',font_size)
 
 text(-0.02,0.84,ABC{5},'FontName','Helvetica','fontsize',ABC_size)
-   
+
 set(gcf,'PaperPositionMode','auto','papersize',[51 14]);
-saveas(gcf,sprintf('%s.pdf',mfilename));
-saveas(gcf,sprintf('%s.png',mfilename));
+print(gcf,mfilename,'-dpdf','-r0')
+saveas(gcf,[mfilename,'.png']);
