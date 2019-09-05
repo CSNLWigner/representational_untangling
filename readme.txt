@@ -41,4 +41,10 @@ noise: std of Gaussian membrane potential noise [mV] (see sigma in Table 1 in th
 lambda: spatial period [deg] of the stimulus or the Gabor filter
 threshold: FRNL threshold [mV]
 
+Neural data for 4 simple cells can be found in the 'neuraldata' folder:
+_raw.mat files consist raw membrane potential data with spikes,
+_gen.mat files consist coarse potential (the so-called generator potential what we get after spike removal)
+_trials.png picture files show raw membrane potential time series of trials for quick inspection.
+
+
 If you have any questions just email to gasparmerse@gmail.com
