@@ -147,7 +147,7 @@ text(x1+dx,y1+2*dy,'orientation','FontName','Helvetica','fontsize',text_size)
 text(x1+dx,y1+dy,'spatial period','FontName','Helvetica','fontsize',text_size)
 text(x1+dx,y1,'contrast','FontName','Helvetica','fontsize',text_size)
 
-text(-75.5,ymax+0.025,'A','fontsize',ABC_size,'FontName','Helvetica','HorizontalAlignment','center','fontweight','bold')
+text(-75.5,ymax+0.025,'A','fontsize',ABC_size,'FontName','Helvetica','HorizontalAlignment','center')
 
 % panel B
  
@@ -175,8 +175,8 @@ line([0 3]+dx,[1/K 1/K],'linestyle',':','color','k')
 
 xlabel('decoding variable','FontName','Helvetica','fontsize',text_size)
 
-text(0,ymax+0.025,'B','fontsize',ABC_size,'FontName','Helvetica','HorizontalAlignment','center','fontweight','bold')
+text(0,ymax+0.025,'B','fontsize',ABC_size,'FontName','Helvetica','HorizontalAlignment','center')
 
 set(gcf,'PaperPositionMode','auto','papersize',[32 24]);
-print(gcf,'Fig4_S2','-dpdf','-r0')
-saveas(gcf,sprintf('%s.png',mfilename));
+print(gcf,mfilename,'-dpdf','-r0')
+saveas(gcf,[mfilename,'.png']);
