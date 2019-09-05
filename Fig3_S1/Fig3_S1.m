@@ -1,10 +1,9 @@
 % script for creating Fig. 3 figure supplement 1
+% note: running time ~ 1min
 % extrenal functions used:
 %   paramset
 %   randisk
 %   circular_gabor
-% input data:
-%   panel_bc_data.mat (MP and FR decoder weights)
 
 close all
 clearvars
@@ -84,11 +83,59 @@ plot(xx,yy,'k','linewidth',1);
 xlim([0 grid_size])
 ylim([0 grid_size])
 
-text(10,grid_size+96,'A','fontsize',panel_label_size,'FontName','Helvetica','HorizontalAlignment','center','fontweight','bold') 
+text(10,grid_size+96,'A','fontsize',panel_label_size,'FontName','Helvetica','HorizontalAlignment','center') 
     
 % panel B
 
-load('panel_bc_data.mat','W_MP','W_FR','K')
+K = 10; MK = 10; J = 50; M1 = 10;
+maxiter = 10000; conv_crit = 1e-4; eta0 = 1e-8;
+stim_DC = 0.5; V0 = -60; V1 = 12; noise = 3; c0 = 0.5;
+
+threshold_MP = -80;
+threshold_FR = -57;
+
+W_MP = zeros(N+1,K-1);
+W_FR = zeros(N+1,K-1);
+
+s0lambda = {'const',lambda0};
+s0theta = {'grid',0,180,K*MK};
+s0phi = {'grid',0,360,J};
+s0DC = {'const',stim_DC};
+s0AC = {'const',stim_DC*c0};
+
+SBANK0 = paramset(s0lambda,s0theta,s0phi,s0DC,s0AC);
+SBANK1 = repmat(SBANK0,M1,1);
+Y1 = ceil(SBANK1(:,2)/(180/K));
+U_MEAN = V0+V1*cresponse(GBANK,SBANK0);
+U1 = repmat(U_MEAN,M1,1)+noise*randn(K*MK*J*M1,N);
+
+threshold = threshold_MP;
+tic
+R1 = nonlin(U1,threshold,1);
+[W1,etas] = mnrfitbb(R1,Y1,0,maxiter,conv_crit,eta0);
+W_MP = W1;
+fprintf('MP iterations: %d (%gsec)\n',length(etas),toc);
+
+threshold = threshold_FR;
+tic
+R1 = nonlin(U1,threshold,1);
+[W1,etas] = mnrfitbb(R1,Y1,0,maxiter,conv_crit,eta0);
+W_FR = W1;
+fprintf('FR iterations: %d (%gsec)\n',length(etas),toc);
+
+eta_MP = W_MP(1,:);
+W_MP = W_MP(2:end,:);
+W_MP = [W_MP,zeros(N,1)];
+W_MP = W_MP-repmat(mean(W_MP,2),1,10);
+min_MP = min(min(W_MP));
+max_MP = max(max(W_MP));
+
+eta_FR = W_FR(1,:);
+W_FR = W_FR(2:end,:);
+W_FR = [W_FR,zeros(N,1)];
+W_FR = W_FR-repmat(mean(W_FR,2),1,10);
+min_FR = min(min(W_FR));
+max_FR = max(max(W_FR));
 
 axes_position = [mleft+width_A+gapx mbottom+subplot_height+gapy width_B subplot_height];
 a1 = axes('unit','pixel','position',axes_position);
@@ -131,7 +178,7 @@ colormap(a1,COLORS)
 cpos = [(figure_width-0.82*mright)/figure_width (mbottom+subplot_height+gapy)/figure_height 0.015 subplot_height/figure_height];
 colorbar('ytick',-0.02:0.01:0.02,'fontsize',round(0.6*text_size),'FontName','Helvetica','linewidth',1,'position',cpos)
 
-text(-28,-1.45,'B','fontsize',panel_label_size,'FontName','Helvetica','HorizontalAlignment','center','fontweight','bold') 
+text(-28,-1.45,'B','fontsize',panel_label_size,'FontName','Helvetica','HorizontalAlignment','center') 
 
 % panel C
 
@@ -167,7 +214,8 @@ colormap(a2,COLORS)
 cpos = [(figure_width-0.82*mright)/figure_width mbottom/figure_height 0.015 subplot_height/figure_height];
 colorbar('ytick',-0.3:0.1:0.3,'fontsize',round(0.6*text_size),'FontName','Helvetica','linewidth',1,'position',cpos)
 
-text(-28,-1.45,'C','fontsize',panel_label_size,'FontName','Helvetica','HorizontalAlignment','center','fontweight','bold') 
+text(-28,-1.45,'C','fontsize',panel_label_size,'FontName','Helvetica','HorizontalAlignment','center') 
 
 set(gcf,'PaperPositionMode','auto','papersize',[43 18]);
-print(gcf,'Fig3_S1','-dpdf','-r0')
+print(gcf,mfilename,'-dpdf','-r0')
+saveas(gcf,[mfilename,'.png']);
