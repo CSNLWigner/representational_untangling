@@ -108,33 +108,32 @@ line([thalf-tunit/2 thalf+tunit/2]+shift,[min(u_gen) min(u_gen)],'linewidth',5,'
 text(thalf+shift-0.038,min(u_gen)+2.0,'100','Fontname','Helvetica','fontsize',math_size-3,'horizontalalignment','center')
 text(thalf+shift+0.040,min(u_gen)+2.0,'ms','Fontname','Helvetica','fontsize',math_size-3,'horizontalalignment','center')
 
-arrow_x = t1+k*TC+0.025;
-arrow([arrow_x DC],[arrow_x DC+A],'Color',legendColor,'width',2,'tipangle',27,'length',11.5)
-arrow([arrow_x DC],[arrow_x DC-A],'Color',legendColor,'width',2,'tipangle',27,'length',11.5)
-
+arrow_x = t1+k*TC+0.025
 text(arrow_x+0.035,DC,'2','FontName','Helvetica','fontsize',math_size,'horizontalalignment','center','color',legendColor)
 text(arrow_x+0.065,DC,'u','FontName','Helvetica','fontsize',math_size,'horizontalalignment','center','color',legendColor)
 text(arrow_x+0.105,DC-0.46,'AC','FontName','Helvetica','fontsize',math_size-6,'horizontalalignment','center','color',legendColor)
 
 arrow_x = thalf+0.09;
 arrow_y = DC-A;
-arrow_length = 12;
-arrow([arrow_x arrow_y+2.6*error_std],[arrow_x arrow_y+error_std],'Color',legendColor,'width',2,'tipangle',27,'length',11.5)
-arrow([arrow_x arrow_y-2.5*error_std],[arrow_x arrow_y-error_std],'Color',legendColor,'width',2,'tipangle',27,'length',11.5)
-
 text(arrow_x+0.044,arrow_y-1.75*error_std,'$$\pm$$','FontName','Helvetica','fontsize',math_size,'interpreter','LaTex','horizontalalignment','center','color',legendColor)
 text(arrow_x+0.088,arrow_y-1.71*error_std,'$$\sigma$$','FontName','Helvetica','fontsize',math_size+5,'interpreter','LaTex','horizontalalignment','center','color',legendColor)
 
 label_x = thalf+0.025;
 yshift = 1.55;
 
-text(label_x+0.045,threshold+yshift,'u','FontName','Helvetica','fontsize',math_size,'horizontalalignment','center','color',legendColor)
-text(label_x+0.077,threshold+yshift-0.46,'th','FontName','Helvetica','fontsize',math_size-6,'horizontalalignment','center','color',legendColor)
+text(label_x+0.045,threshold+yshift,'u','FontName','Helvetica','fontsize',math_size,'horizontalalignment','center','color',spikeColor)
+text(label_x+0.077,threshold+yshift-0.46,'th','FontName','Helvetica','fontsize',math_size-6,'horizontalalignment','center','color',spikeColor)
 
 text(label_x+0.045,DC+yshift,'u','FontName','Helvetica','fontsize',math_size,'horizontalalignment','center','color',legendColor)
 text(label_x+0.087,DC+yshift-0.47,'DC','FontName','Helvetica','fontsize',math_size-6,'horizontalalignment','center','color',legendColor)
 
-text(-0.233,1.125,'A','fontname','Helvetica','fontweight','bold','fontsize',ABC_size,'units','normalized')
+text(-0.233,1.125,'A','fontname','Helvetica','fontsize',ABC_size,'units','normalized')
+
+arrow([.359 .71],[.359 .83],.015,.011,2.2,'r')
+arrow([.359 .71],[.359 .60],.015,.011,2.2,'r')
+
+arrow([.257 .543],[.257 .578],.015,.011,2.2,'r')
+arrow([.257 .661],[.257 .624],.015,.011,2.2,'r')
 
 % panel B dn (histograms)
 
@@ -174,8 +173,8 @@ ylim([0 ymax]);
 set(gca,'ytick',[])
 
 xlabel('membrane potential [mV]','FontName','Helvetica','fontsize',font_size)
-text(-67.55,-0.01,'normalized','FontName','Helvetica','fontsize',font_size,'rotation',90)
-text(-64.9,0.045,'counts','FontName','Helvetica','fontsize',font_size,'rotation',90)
+text(-68.15,-0.01,'normalised','FontName','Helvetica','fontsize',font_size,'rotation',90)
+text(-65.25,0.045,'counts','FontName','Helvetica','fontsize',font_size,'rotation',90)
 
 threshold = -44.8730;
 
@@ -261,7 +260,7 @@ text(threshold+0.85,ymax+8,'th','FontName','Helvetica','fontsize',math_size-6,'h
 text(-35,ymax+10,'$$\kappa_1$$','FontName','Helvetica','fontsize',math_size,'interpreter','LaTex','horizontalalignment','center','color',legendColor)
 text(-38.5,ymax+10,'$$\kappa_2$$','FontName','Helvetica','fontsize',math_size,'interpreter','LaTex','horizontalalignment','center','color',legendColor)
 
-text(-0.345,1.22,'B','fontname','Helvetica','fontweight','bold','fontsize',ABC_size,'units','normalized')
+text(-0.345,1.22,'B','fontname','Helvetica','fontsize',ABC_size,'units','normalized')
 
 % panel C
 
@@ -326,10 +325,10 @@ for n = 1:4
 end
 
 xlabel('noise-to-signal ratio','FontName','Helvetica','fontsize',font_size)
-ylab = ylabel('normalized threshold','FontName','Helvetica','fontsize',font_size)
+ylab = ylabel('normalised threshold','FontName','Helvetica','fontsize',font_size)
 set(ylab, 'position', get(ylab,'position')-[0.01,0,0]);
 
-text(-0.205,1.175,'C','fontname','Helvetica','fontweight','bold','fontsize',ABC_size,'units','normalized')
+text(-0.205,1.175,'C','fontname','Helvetica','fontsize',ABC_size,'units','normalized')
 
 axes_position = [mleft+0.15*width_C mbottom+0.7*height_C 0.4*width_C 0.3*height_C];
 axes('unit','pixel','position',axes_position)
@@ -442,7 +441,7 @@ hold on
 set(gca,'FontName','Helvetica','fontsize',font_size)
 set(gca,'xlim',xrange,'ylim',yrange,'fontsize',font_size,'linewidth',1.5)
 
-title({'information maximization',''})
+title({'information maximisation',''})
 
 V0 = -60; V1 = 12;
 
@@ -463,7 +462,7 @@ end
 
 xlabel('noise-to-signal ratio','FontName','Helvetica','fontsize',font_size)
 
-text(-0.113,1.175,'D','fontname','Helvetica','fontweight','bold','fontsize',ABC_size,'units','normalized')
+text(-0.113,1.175,'D','fontname','Helvetica','fontsize',ABC_size,'units','normalized')
 
 axes_position = [mleft+width_C+gapx2+0.15*width_C mbottom+0.7*height_C 0.4*width_C 0.3*height_C];
 axes('unit','pixel','position',axes_position)
@@ -529,8 +528,8 @@ scatter(0,.54,200,'s','filled','MarkerFaceColor',grey)
 text(legend_x0,.545,'robust performance regime','fontname','Helvetica','fontsize',font_size-5)
 
 set(gcf,'PaperPositionMode','auto','papersize',[37.5 28]);
-print(gcf,'Fig7','-dpdf','-r0')
-saveas(gcf,sprintf('%s.png',mfilename));
+print(gcf,mfilename,'-dpdf','-r0')
+saveas(gcf,[mfilename,'.png']);
 
 all_points
 grey_region
