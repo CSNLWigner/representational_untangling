@@ -168,5 +168,5 @@ end
 set(gca,'layer','top') 
 
 set(gcf,'PaperPositionMode','auto','papersize',[28 21]);
-print(gcf,'Fig5','-dpdf','-r0')
-saveas(gcf,sprintf('%s.png',mfilename));
+print(gcf,mfilename,'-dpdf','-r0')
+saveas(gcf,[mfilename,'.png']);
