@@ -45,7 +45,11 @@ set(gca,'linewidth',1,'FontName','Helvetica','fontsize',font_size)
 
 plot([])
 hold on
-load(sprintf('phase_nuisance_%s_data.mat',name{i}))
+if i < 4
+    load(sprintf('../Fig6/%s/phase_nuisance_noise3mV_%s_data.mat',name{i},name{i}))
+else
+    load('phase_nuisance_exponent_data.mat')
+end
 
 N1 = size(ITERATIONS,1);
 
@@ -67,14 +71,18 @@ ax.YRuler.MinorTickValues = 0:0.05:1;
 xlabel('FRNL threshold [mV]','FontName','Helvetica','fontsize',font_size)
 if mod(i,4) == 1 ylabel('fraction correct','FontName','Helvetica','fontsize',font_size); end
 
-%%%
+if i == 1
+    text(-46.3,1.013,'$N$','Interp','Latex','fontsize',17)
+end
+if i == 2
+    text(-46.4,1.013,'$K$','Interp','Latex','fontsize',17)
+end
 if i == 3
     text(-46.1,1.02,'$\varrho$','Interp','Latex','fontsize',18)
 end
 if i == 4
     text(-45.6,1.02,'$\kappa$','Interp','Latex','fontsize',18)
 end
-%%%
 
 curve_plots = 1:N1;
 legend_strings = {};
@@ -98,7 +106,6 @@ for n1 = 1:N1
     eval(sprintf('value = %s_values(n1);',name{i}));
     legend_strings{end+1} = sprintf('%g%s',value,ref);
     [~,maxi] = max(FC_LIN(n1,:));
-    % insert new maxfit !!!
     [maxx,maxy] = maxfit(thresholds(maxi-3:maxi+3),FC_LIN(n1,maxi-3:maxi+3));
     line([maxx maxx],[ymin(i) ymin(i)+0.035*(ymax(i)-ymin(i))],'linewidth',2,'color',color)
     data(i).optth(end+1) = maxx;
@@ -111,7 +118,7 @@ leg_pos = get(leg,'position');
 leg_pos(1) = leg_pos(1)+0.01;
 set(leg,'position',leg_pos)
 legend boxoff
-text(-42.5,ymax(i)+0.025*(ymax(i)-ymin(i)),[long{i} ' (' short{i} ') ' SI_unit{i}],'FontName','Helvetica','fontsize',font_size,'horizontalalignment','right');
+text(-42.5,ymax(i)+0.025*(ymax(i)-ymin(i)),[long{i},' (',  '    '   ,') ',SI_unit{i}],'FontName','Helvetica','fontsize',font_size,'horizontalalignment','right');
 if i == 1
     text(-77.4,ymin(i)+1.12*(ymax(i)-ymin(i)),ABCD{i},'FontName','Helvetica','fontsize',ABC_size)
 else
@@ -120,4 +127,5 @@ end
 end
 
 set(gcf,'PaperPositionMode','auto','papersize',[44 14]);
-saveas(gcf,sprintf('%s.pdf',mfilename));
+print(gcf,mfilename,'-dpdf','-r0')
+% saveas(gcf,[mfilename,'.png']);
