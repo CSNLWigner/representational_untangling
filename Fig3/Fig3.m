@@ -138,7 +138,7 @@ leg_gapx = 3;
 leg_y0 = 0.58;
 leg_gapy = 0.1;
 leg_titlegap = 0.09;
-leg_linespace = 0.065;
+leg_linespace = 0.053;
 leg_neg = 1.4;
 
 text(leg_x0+0.5*leg_width,leg_y0+leg_gapy+leg_titlegap+leg_linespace,'fixed','fontsize',leg_size,'HorizontalAlignment','center','fontname','Helvetica')
@@ -175,7 +175,7 @@ Bayesbound_2d_MP = OPTPERF_2D(1);
 Bayesbound_2d_FR = OPTPERF_2D(maxi);
 scatter(maxx,maxy,100,phase_color,'d','filled')
 
-text(-75.8,1+ABC_yshift,'A','fontsize',ABC_size,'HorizontalAlignment','center','fontweight','bold')
+text(-75.8,1+ABC_yshift,'A','fontsize',ABC_size,'HorizontalAlignment','center')
 
 gwidth = 0.25*width_B;
 axes_position = [mleft+width_A+gapx-2.5*gwidth mbottom+height-.45*gwidth gwidth gwidth];
@@ -210,18 +210,18 @@ plot(xx,yy,'color','k','linewidth',1)
 
 % inset
 
-axes_position = [mleft+0.085*width_A mbottom+0.50*height 0.20*width_A 0.22*height];
+axes_position = [mleft+0.081*width_A mbottom+0.50*height 0.20*width_A 0.22*height];
 axes('unit','pixel','position',axes_position)
 set(gca,'FontName','Helvetica','fontsize',10,'linewidth',1)
 
 hold on
 
 plot(0:0.01:1,0:0.01:1,'k')
-scatter(LINPERF_2D,1/K+SPARSENESS.*(OPTPERF_2D-1/K),5,phase_color,'filled')
+scatter(1/K+SPARSENESS.*(OPTPERF_2D-1/K),LINPERF_2D,5,phase_color,'filled')
 set(gca,'xlim',[0 1],'ylim',[0 1],'xtick',[0 1],'ytick',[0 1],'fontname','Helvetica','fontsize',10)
 axis square
-xlabel({'actual performance'},'fontname','Helvetica','fontsize',10)
-ylabel({'predicted performance'},'fontname','Helvetica','fontsize',10)
+xlabel({'predicted performance'},'fontname','Helvetica','fontsize',10)
+ylabel({'actual performance'},'fontname','Helvetica','fontsize',10)
 title({'linear decoder',''})
 
 % panel B
@@ -272,7 +272,7 @@ text(bargap0+bargap1+1.5*barwidth+bargap2+bargap1+2*barwidth,MPFR_yshift,'FR','F
  
 line([0 width_B],[1/K 1/K],'linestyle',':','linewidth',ax_width,'color','k')
  
-text(-20,1+ABC_yshift,'B','fontsize',ABC_size,'HorizontalAlignment','center','fontweight','bold')
+text(-20,1+ABC_yshift,'B','fontsize',ABC_size,'HorizontalAlignment','center')
 
 % panel C
 
@@ -313,7 +313,7 @@ text(bargap0+bargap1+1.5*barwidth+bargap2+bargap1+2*barwidth,MPFR_yshift,'FR','F
  
 line([0 width_B],[1/K 1/K],'linestyle',':','linewidth',ax_width,'color','k')
  
-text(-17,1+ABC_yshift,'C','fontsize',ABC_size,'HorizontalAlignment','center','fontweight','bold')
+text(-17,1+ABC_yshift,'C','fontsize',ABC_size,'HorizontalAlignment','center')
 
 gwidth = 0.25*width_B;
 axes_position = [mleft+width_A+gapx+width_B+gapx2+1.7*gwidth mbottom+height-.45*gwidth gwidth gwidth];
@@ -386,7 +386,7 @@ text(bargap0+bargap1+1.5*barwidth+bargap2+bargap1+2*barwidth,MPFR_yshift,'FR','F
  
 line([0 width_B],[1/K 1/K],'linestyle',':','linewidth',ax_width,'color','k')
  
-text(-17,1+ABC_yshift,'D','fontsize',ABC_size,'HorizontalAlignment','center','fontweight','bold')
+text(-17,1+ABC_yshift,'D','fontsize',ABC_size,'HorizontalAlignment','center')
 
 gwidth = 0.25*width_B;
 axes_position = [mleft+width_A+gapx+2*width_B+2*gapx2+1.7*gwidth mbottom+height-.45*gwidth gwidth gwidth];
@@ -421,5 +421,5 @@ hold on
 plot(xx,yy,'color','k','linewidth',1)
 
 set(gcf,'PaperPositionMode','auto','papersize',[42 15]);
-print(gcf,'Fig3','-dpdf','-r0')
-saveas(gcf,sprintf('%s.png',mfilename));
+print(gcf,mfilename,'-dpdf','-r0')
+saveas(gcf,[mfilename,'.png']);
