@@ -22,18 +22,18 @@ width_A = 560;
 width_C = 180;
 height_A = 120;
 height_B = 360;
-mtop = 50;
-mbottom = 60;
+mtop = 52;
+mbottom = 62;
 mright = 25;
-mleft = 65;
+mleft = 70;
 gapx = 36;
-gapy = 72.5;
+gapy = 95;
 figure_width = mleft+width_A+gapx+width_C+mright;
 figure_height = mbottom+height_B+gapy+height_A+mtop;
 set(gcf,'unit','pixel','position',[0 0 figure_width figure_height])
 set(gcf,'color','white')
-subgapx = 25;
-subwidth = (width_A-2*subgapx)/3;
+subgapx = 38;
+subwidth = (width_A+gapx+width_C-2*subgapx)/3;
 
 load('script_1d2d3d4d_data.mat');
 
@@ -63,14 +63,20 @@ for i1 = 1:3
     switch i1
         case 1
             yy = 0*xx+0.75;
-            text(180,2.2,'phase [deg]','fontsize',text_size,'HorizontalAlignment','center');
+            xlab = xlabel('phase','FontName','Helvetica','fontsize',text_size)
+            set(gca,'xticklabel',{sprintf('0%c',char(176)),sprintf('360%c',char(176))})
         case 2
             yy = 5*lognorm(xx)/integral(lognorm,0.5,7.5);
-            text(4,2.2,'spatial period [deg]','fontsize',text_size,'HorizontalAlignment','center');
+            xlab = xlabel('spatial period','FontName','Helvetica','fontsize',text_size)
+            set(gca,'xticklabel',{sprintf('0.5%c',char(176)),sprintf('7.5%c',char(176))})
         case 3
             yy = 0.6*beta(xx)/integral(beta,0,1);
-            text(.5,2.2,'contrast','fontsize',text_size,'HorizontalAlignment','center');
+            xlab = xlabel('contrast','FontName','Helvetica','fontsize',text_size)
     end
+    
+    xlab_pos = get(xlab,'position');
+    xlab_pos(2) = xlab_pos(2)+0.25;
+    set(xlab,'position',xlab_pos)
     
     plot([])
     area(xx,yy,'FaceColor',[.9 .9 .9],'EdgeColor','none')
@@ -79,9 +85,9 @@ for i1 = 1:3
     plot([nuisance(i1).star nuisance(i1).star],[0 0.1],'k','linewidth',2)
    
     if i1 == 1
-        text(-82,0.43,'probability','FontName','Helvetica','fontsize',text_size,'rotation',90)
-        text(-40,0.63,'density','FontName','Helvetica','fontsize',text_size,'rotation',90)
-        text(-55,2.5,'A','fontsize',panel_label_size,'FontName','Helvetica','HorizontalAlignment','center','fontweight','bold')
+        text(-65,0.43,'probability','FontName','Helvetica','fontsize',text_size,'rotation',90)
+        text(-35,0.63,'density','FontName','Helvetica','fontsize',text_size,'rotation',90)
+        text(-70,2.5,'A','fontsize',panel_label_size,'FontName','Helvetica','HorizontalAlignment','center')
     end     
 end
 
@@ -91,18 +97,22 @@ axes_position = [mleft mbottom width_A height_B];
 axes('unit','pixel','position',axes_position)
 set(gca,'FontName','Helvetica','fontsize',text_size,'linewidth',1)
 
-text(-74.0,1+panel_label_yshift,'B','fontsize',panel_label_size,'FontName','Helvetica','HorizontalAlignment','center','fontweight','bold')
+text(-75.1,1+panel_label_yshift,'B','fontsize',panel_label_size,'FontName','Helvetica','HorizontalAlignment','center')
 hold on
 
 set(gca,'xlim',[xmin,xmax],'xtick',-70:5:-45,'xticklabel',{'-70','-65','-60','-55','-50','-45'})
 set(gca,'ylim',[0 1],'ytick',0:.1:1)
 xlabel('FRNL threshold [mV]','FontName','Helvetica','fontsize',text_size)
-ylabel('fraction correct','FontName','Helvetica','fontsize',text_size)
+ylab = ylabel('fraction correct','FontName','Helvetica','fontsize',text_size)
+
+ylab_pos = get(ylab,'position');
+ylab_pos(1) = ylab_pos(1)-0.15;
+set(ylab,'position',ylab_pos)
 
 plots = [];
 
-leg_x0 = -47.9;
-leg_y0 = 0.725;
+leg_x0 = -47.5;
+leg_y0 = 0.64;
 leg_width = 1.75;
 leg_dx = 1.4;
 leg_dy = 0.05;
@@ -172,8 +182,8 @@ line([1 8]+dx,[1/K 1/K],'linestyle',':','color','k')
 
 xlabel('nuisance combination','FontName','Helvetica','fontsize',text_size)
 
-text(0,1+panel_label_yshift,'C','fontsize',panel_label_size,'FontName','Helvetica','HorizontalAlignment','center','fontweight','bold')
+text(0,1+panel_label_yshift,'C','fontsize',panel_label_size,'FontName','Helvetica','HorizontalAlignment','center')
 
-set(gcf,'PaperPositionMode','auto','papersize',[32 24]);
-print(gcf,'Fig4','-dpdf','-r0')
-saveas(gcf,sprintf('%s.png',mfilename));
+set(gcf,'PaperPositionMode','auto','papersize',[32 24.5]);
+print(gcf,mfilename,'-dpdf','-r0')
+saveas(gcf,[mfilename,'.png']);
