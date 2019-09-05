@@ -63,6 +63,8 @@ gsigma = {'const',sigma0};
 GBANK = paramset(gx0,gy0,glambda,gtheta,gphi,gsigma);
 GBANK(:,1:2) = randisk(disk_radius,N,gcenter_seed);
 
+% STIMULUS BANK:
+
 s0lambda = {'const',lambda0};
 s0theta = {'grid',0,180,K*MK};
 s0phi = {'grid',0,360,J};

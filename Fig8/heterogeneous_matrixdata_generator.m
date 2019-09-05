@@ -1,4 +1,5 @@
-clear all
+close all
+clearvars
 
 cd(fileparts(which(mfilename)));
 

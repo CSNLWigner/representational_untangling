@@ -62,5 +62,5 @@ set(gca,'linewidth',2)
 hold on
 
 set(gcf,'PaperPositionMode','auto','papersize',[31 25]);
-print(gcf,'Fig8','-dpdf','-r0')
-saveas(gcf,sprintf('%s.png',mfilename));
+print(gcf,mfilename,'-dpdf','-r0')
+saveas(gcf,[mfilename,'.png']);
